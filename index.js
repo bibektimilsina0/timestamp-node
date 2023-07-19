@@ -19,14 +19,30 @@ app.get("/", function (req, res) {
 });
 
 
+
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get("/api/:date", function (req, res) {
+  function isUTCString(value) {
+    return typeof value === 'string' && !isNaN(Date.parse(value));
+  }
+ if(!isUTCString(req.params.date)){
+  const unixTimestamp=req.params.date;
+  const date=new Date(unixTimestamp*1000)
+  res.json({unix:unixTimestamp,"utc":date.toString()});
+ }else{
+   
+  const date=new Date(req.params.date)
+    const unixTimestamp = Math.floor(date.getTime() / 1000);
+    res.json({unix:unixTimestamp,"utc":date.toString()});
+}
+  
+ 
 });
 
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+const port=process.env.PORT||3000
+var listener = app.listen(port, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
